@@ -1,178 +1,169 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-REAPER SUITE - v11.0 Intelligence
-Dev: 1nn3rR00t
-Kali Linux / WSL2 Optimized
-"""
-
-import requests
-import sys
-import argparse
-import time
-import threading
-import socket
-import datetime
-import random
+import requests, sys, argparse, time, socket, threading, json
+from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 from functools import partial
+from urllib.parse import urlparse
 
-# --- Terminal Aesthetics ---
-R, G, C, M, Y, B, X = "\033[91m", "\033[92m", "\033[96m", "\033[95m", "\033[93m", "\033[1m", "\033[0m"
-DIM = "\033[2m"
-
-USER_AGENTS = [
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0",
-    "Mozilla/5.0 (iPhone; CPU iPhone OS 15_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.5 Safari/605.1.15"
-]
+# --- PALETA DE CORES NEON (TRUECOLOR RGB 24-BIT) ---
+C_PINK   = "\033[38;2;255;45;170m"   # Neon Pink
+C_CYAN   = "\033[38;2;0;255;255m"    # Electric Cyan
+C_PURP   = "\033[38;2;145;70;255m"   # Deep Purple
+C_WHITE  = "\033[38;2;255;255;255m"
+C_DIM    = "\033[38;2;80;80;80m"     # Stealth Grey
+BOLD     = "\033[1m"
+X        = "\033[0m"
 
 print_lock = threading.Lock()
 findings = []
 
-def get_ip(url):
-    try:
-        host = url.split("://")[-1].split("/")[0].split(":")[0]
-        return socket.gethostbyname(host)
-    except: return "Unknown"
+def print_banner():
+    banner = f"""
+{C_PINK}    ____  __________ _____  __________ 
+{C_PINK}   / __ \/ ____/ __ / __ \/ ____/ __  \\
+{C_PURP}  / /_/ / __/ / /_/ / /_/ / __/ / /_/ /
+{C_PURP} / _, _/ /___/ __  / ____/ /___/ _, _/ 
+{C_CYAN}/_/ |_/_____/_/ |_/_/   /_____/_/ |_|   
+{C_CYAN}         [ NN2RR00T - CORE v11.0 ]{X}"""
+    print(banner)
 
-def tech_fingerprint(url, headers_base):
+def print_hud(args, target_ip, total_payloads):
+    now = datetime.now().strftime("%H:%M:%S")
+    div = f"{C_PURP}━{'━' * 58}━{X}"
+    print(div)
+    print(f"{C_CYAN}{BOLD} ► INFRASTRUCTURE LOGIC{X}")
+    print(f"   {C_PINK}target:{X}  {C_WHITE}{args.url}{X}")
+    print(f"   {C_PINK}addr:{X}    {C_WHITE}{target_ip}{X} {C_PURP}│{X} {C_PINK}time:{X} {C_WHITE}{now}{X}")
+    print(div)
+    print(f"{C_CYAN}{BOLD} ► KERNEL CONFIGURATION{X}")
+    print(f"   {C_PURP}[mode]{X}   {C_WHITE}{args.mode.upper()}{X}    {C_PURP}[threads]{X} {C_WHITE}{args.threads}{X}")
+    print(f"   {C_PURP}[load]{X}   {C_WHITE}{total_payloads} payloads{X}")
+    if args.extensions: print(f"   {C_PURP}[exts]{X}   {C_CYAN}{args.extensions}{X}")
+    print(div)
+    print(f"{C_CYAN}{BOLD} ► ACTIVE FILTERS{X}")
+    print(f"   {C_PINK}drop_code:{X} {C_WHITE}{args.hc}{X}   {C_PINK}drop_size:{X} {C_WHITE}{args.hs}{X}")
+    print(div + "\n")
+
+def generate_reports(target, findings_list):
+    """Gera relatórios HTML e JSON com estética Cyberpunk"""
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    report_name = f"reaper_report_{timestamp}"
+    
+    # HTML Synthwave Template
+    html_content = f"""
+    <!DOCTYPE html>
+    <html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <title>REAPER INTELLIGENCE REPORT</title>
+        <style>
+            body {{ background: #0a0a0c; color: #00ffff; font-family: 'Courier New', monospace; padding: 40px; line-height: 1.6; }}
+            .container {{ border: 2px solid #ff2da2; box-shadow: 0 0 20px #ff2da2; padding: 30px; background: rgba(255, 45, 170, 0.05); border-radius: 8px; }}
+            h1 {{ color: #ff2da2; text-transform: uppercase; border-bottom: 2px solid #00ffff; padding-bottom: 10px; text-shadow: 2px 2px #5a00ff; }}
+            .info {{ margin-bottom: 30px; border-left: 4px solid #9146ff; padding-left: 15px; }}
+            .finding {{ background: #1a1a1d; margin: 10px 0; padding: 15px; border-left: 5px solid #00ffff; border-radius: 0 5px 5px 0; transition: 0.3s; }}
+            .finding:hover {{ background: #252529; transform: translateX(10px); border-left-color: #ff2da2; }}
+            .tag {{ color: #ff2da2; font-weight: bold; }}
+            .footer {{ margin-top: 50px; font-size: 0.8em; color: #444; text-align: center; border-top: 1px solid #333; padding-top: 20px; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>💀 Reaper Intelligence Report</h1>
+            <div class="info">
+                <p><strong>ALVO:</strong> {target}</p>
+                <p><strong>DATA:</strong> {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}</p>
+                <p><strong>PONTOS DE ACESSO:</strong> {len(findings_list)}</p>
+            </div>
+            <div id="results">
+                {''.join([f'<div class="finding"><span class="tag">[FOUND]</span> {f}</div>' for f in findings_list]) if findings_list else '<p>Nenhum resultado encontrado.</p>'}
+            </div>
+            <div class="footer">GENERATED BY 1NN3RR00T - CORE v11.0 | SHADOW OPERATIONS</div>
+        </div>
+    </body>
+    </html>
     """
-    Tries to identify the server stack to provide tactical advice.
-    """
+    
+    # Salva HTML
+    with open(f"{report_name}.html", "w", encoding="utf-8") as f:
+        f.write(html_content)
+    
+    # Salva JSON (para conversão PDF ou integração)
+    report_data = {
+        "target": target,
+        "total_hits": len(findings_list),
+        "timestamp": timestamp,
+        "results": findings_list
+    }
+    with open(f"{report_name}.json", "w", encoding="utf-8") as f:
+        json.dump(report_data, f, indent=4)
+
+    print(f"\n{C_CYAN}[REPORT]{X} Web Report: {C_WHITE}{report_name}.html{X}")
+    print(f"{C_CYAN}[REPORT]{X} Data Export: {C_WHITE}{report_name}.json{X}")
+
+def worker(payload, target_url, h_codes, h_sizes, verbose, mode, base_domain):
+    current_host = f"{payload}.{base_domain}" if mode == "vhost" else base_domain
+    headers = {"User-Agent": "1NN3RR00T-Reaper/11.0", "Host": current_host}
+
     try:
-        # Grab a quick response to check headers
-        res = requests.head(url, headers=headers_base, timeout=5, allow_redirects=True)
-        server = res.headers.get("Server", "").lower()
-        powered = res.headers.get("X-Powered-By", "").lower()
-        
-        techs = []
-        advice = []
+        url = target_url if mode == "vhost" else target_url.replace("FUZZ", payload)
+        res = requests.get(url, headers=headers, timeout=7, allow_redirects=False)
+        size = len(res.content)
+        is_hit = res.status_code not in h_codes and size not in h_sizes
 
-        if "php" in server or "php" in powered:
-            techs.append("PHP")
-            advice.append(".php, .phtml, .php3")
-        if "asp.net" in powered or "microsoft-iis" in server:
-            techs.append("ASP.NET / IIS")
-            advice.append(".asp, .aspx, .config")
-        if "apache" in server: techs.append("Apache")
-        if "nginx" in server: techs.append("Nginx")
-
-        if techs:
-            print(f"{Y}[TECH-IDENTIFIED]{X} Stack: {B}{', '.join(techs)}{X}")
-            if advice:
-                print(f"{C}[STRATEGY]{X} Sugestão de extensões: {G}{', '.join(advice)}{X}")
-        return techs
-    except:
-        return []
-
-def worker_engine(payload, target_url, method, data_tmp, base_headers, h_codes, h_sizes, fail_str, success_str, delay, verbose):
-    # Stealth delay jitter
-    if delay:
-        d_min, d_max = map(float, delay.split('-')) if '-' in delay else (float(delay), float(delay))
-        time.sleep(random.uniform(d_min, d_max))
-
-    # UA Rotation per request
-    headers = base_headers.copy()
-    headers["User-Agent"] = random.choice(USER_AGENTS)
-
-    url = target_url.replace("FUZZ", payload)
-    data = data_tmp.replace("FUZZ", payload) if data_tmp else None
-
-    # Determine context for the report
-    ctx = "FILE/DIR"
-    if data_tmp:
-        dt = data_tmp.lower()
-        if any(x in dt for x in ["pass", "pwd", "secret"]): ctx = "PASSWORD"
-        elif any(x in dt for x in ["user", "login"]): ctx = "USER"
-
-    if verbose:
         with print_lock:
-            sys.stdout.write(f"\r{DIM}[*] Checking: {payload[:30]}{X}\033[K")
-            sys.stdout.flush()
-
-    try:
-        res = requests.request(method, url, data=data, headers=headers, timeout=7, allow_redirects=True)
-        body = res.content.decode('utf-8', errors='ignore')
-
-        # Logic for a valid hit
-        is_hit = True
-        if res.status_code in h_codes or len(res.content) in h_sizes: is_hit = False
-        if fail_str and fail_str in body: is_hit = False
-        if success_str and success_str not in body: is_hit = False
-
-        if is_hit:
-            with print_lock:
-                sys.stdout.write("\r\033[K")
-                color = G if ctx in ["PASSWORD", "USER"] else C
-                print(f"{color}[{ctx}]{X} {payload:<20} | Status: {res.status_code} | Size: {len(res.content)}")
-                findings.append({"type": ctx, "payload": payload, "code": res.status_code, "size": len(res.content)})
-    except: pass
+            if is_hit:
+                sys.stdout.write("\r\033[2K")
+                display = current_host if mode == "vhost" else payload
+                print(f"{C_CYAN}[FOUND]{X} {C_WHITE}{display:<25}{X} {C_PINK}➔{X} Status: {C_CYAN}{res.status_code}{X} {C_PURP}│{X} Size: {C_CYAN}{size}B{X}")
+                findings.append(display)
+            elif verbose:
+                sys.stdout.write(f"\r\033[K{C_DIM}[*] Scanning kernel: {payload[:40]}{X}")
+                sys.stdout.flush()
+    except Exception: pass
 
 def main():
-    parser = argparse.ArgumentParser(description="Reaper v11.0 - 1nn3rR00t")
+    parser = argparse.ArgumentParser()
     parser.add_argument("-u", "--url", required=True)
     parser.add_argument("-w", "--wordlist", required=True)
-    parser.add_argument("-m", "--mode", choices=['vhost', 'dir', 'custom'], default='custom')
-    parser.add_argument("-d", "--data")
-    parser.add_argument("-x", "--extensions")
+    parser.add_argument("-m", "--mode", choices=['dir', 'vhost'], default='dir')
     parser.add_argument("-t", "--threads", type=int, default=30)
-    parser.add_argument("-v", "--verbose", action="store_true")
-    parser.add_argument("--delay")
+    parser.add_argument("-x", "--extensions")
     parser.add_argument("--hc", default="404")
     parser.add_argument("--hs", default="0")
-    parser.add_argument("--fail")
-    parser.add_argument("--success")
-    
+    parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args()
 
-    # Load wordlist early
-    try:
-        with open(args.wordlist, 'r', errors='ignore') as f:
-            payloads_raw = f.read().splitlines()
-    except:
-        print(f"{R}[-]{X} Wordlist não encontrada."); sys.exit(1)
-
-    # Initial UI
     print("\033c", end="")
-    print(f"{M}{B}REAPER v11.0{X} | {C}Cyber-Intelligence Mode{X}")
-    print(f"{DIM}Target: {args.url} | Wordlist: {args.wordlist.split('/')[-1]}{X}\n")
+    print_banner()
 
-    # Run Fingerprinting
-    base_headers = {"User-Agent": random.choice(USER_AGENTS)}
-    target_clean = args.url if "://" in args.url else f"http://{args.url}"
-    techs = tech_fingerprint(target_clean, base_headers)
+    parsed = urlparse(args.url)
+    base_domain = parsed.hostname
+    try: ip = socket.gethostbyname(base_domain)
+    except: ip = "127.0.0.1"
 
-    # Auto-extension logic (optional, but professional)
-    final_payloads = []
-    ext_list = args.extensions.split(",") if args.extensions else []
+    with open(args.wordlist, 'r') as f: payloads = f.read().splitlines()
+    if args.extensions and args.mode == 'dir':
+        payloads += [f"{p}.{e.strip()}" for p in payloads for e in args.extensions.split(",")]
+
+    print_hud(args, ip, len(payloads))
+    target_path = args.url if "FUZZ" in args.url or args.mode == 'vhost' else args.url.rstrip('/') + "/FUZZ"
+
+    print(f"{C_PURP}{BOLD}>>> INITIALIZING INFILTRATION PROTOCOL...{X}\n")
+
+    engine = partial(worker, target_url=target_path, h_codes=[int(x) for x in args.hc.split(",")],
+                     h_sizes=[int(x) for x in args.hs.split(",")], verbose=args.verbose,
+                     mode=args.mode, base_domain=base_domain)
+
+    with ThreadPoolExecutor(max_workers=args.threads) as executor:
+        executor.map(engine, payloads)
+
+    sys.stdout.write("\r\033[2K")
+    print(f"\n{C_CYAN}[+]{X} Operation Complete. {BOLD}{len(findings)}{X} access points verified.")
     
-    for p in payloads_raw:
-        final_payloads.append(p)
-        for ext in ext_list:
-            final_payloads.append(f"{p}.{ext.strip('.')}")
-
-    # Execution
-    h_codes = [int(x) for x in args.hc.split(",")]
-    h_sizes = [int(x) for x in args.hs.split(",")]
-    
-    target_url = target_clean
-    if args.mode == "dir" and "FUZZ" not in target_url:
-        target_url = f"{target_url.rstrip('/')}/FUZZ"
-
-    print(f"{R}>>> INICIANDO ATAQUE EM {len(final_payloads)} ENDPOINTS...{X}\n")
-
-    worker = partial(worker_engine, target_url=target_url, method="POST" if args.data else "GET",
-                     data_tmp=args.data, base_headers=base_headers, h_codes=h_codes, h_sizes=h_sizes,
-                     fail_str=args.fail, success_str=args.success, delay=args.delay, verbose=args.verbose)
-
-    try:
-        with ThreadPoolExecutor(max_workers=args.threads) as pool:
-            pool.map(worker, final_payloads)
-    except KeyboardInterrupt:
-        print(f"\n{R}[!] Abortando por comando do usuário.{X}")
-
-    print(f"\n{G}[+]{X} Fim da operação. Total de achados: {len(findings)}")
+    # Geração Automática de Relatórios
+    if findings:
+        generate_reports(args.url, findings)
 
 if __name__ == "__main__":
     main()

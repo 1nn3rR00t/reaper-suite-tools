@@ -1,33 +1,39 @@
 #!/bin/bash
 
-# --- REAPER SUITE INSTALLER FOR ARCH LINUX ---
-# Autor: 1nn3rR00t
+# --- CORES NEON PARA O SETUP ---
+C_PINK="\033[38;2;255;45;170m"
+C_CYAN="\033[38;2;0;255;255m"
+C_PURP="\033[38;2;145;70;255m"
+X="\033[0m"
 
-# Cores para o terminal
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-NC='\033[0m' # Sem cor
+echo -e "${C_PINK}    ____  __________ _____  __________ "
+echo -e "   / __ \/ ____/ __ / __ \/ ____/ __  \\"
+echo -e "${C_PURP}  / /_/ / __/ / /_/ / /_/ / __/ / /_/ /"
+echo -e " / _, _/ /___/ __  / ____/ /___/ _, _/ "
+echo -e "${C_CYAN}/_/ |_/_____/_/ |_/_/   /_____/_/ |_|   "
+echo -e "         [ SETUP PROTOCOL - v11.0 ]${X}\n"
 
-echo -e "${GREEN}[*] A iniciar instalação da Reaper Suite...${NC}"
+# 1. Atualizar e instalar dependências do sistema
+echo -e "${C_CYAN}[*]${X} A instalar dependências do sistema (wkhtmltopdf)..."
+sudo apt update -y && sudo apt install -y wkhtmltopdf python3-pip
 
-# 1. Verificar se o Python está instalado
-if ! command -v python3 &> /dev/null; then
-    echo -e "${RED}[!] Python3 não encontrado. Instala-o com: sudo pacman -S python${NC}"
-    exit 1
-fi
+# 2. Instalar bibliotecas Python necessárias
+echo -e "${C_CYAN}[*]${X} A configurar ambiente Python (requests)..."
+pip3 install requests
 
-# 2. Instalar dependências (requests) via pacman (preferível no Arch) ou pip
-echo -e "${GREEN}[*] A instalar dependências...${NC}"
-sudo pacman -S --noconfirm python-requests &> /dev/null
+# 3. Criar Wordlists de teste
+echo -e "${C_CYAN}[*]${X} A gerar wordlists de laboratório..."
+echo -e "admin\nconfig\nbackup\napi\nindex\nlogin\nphpmyadmin\n.env" > common.txt
+echo -e "www\ndev\napi\nstaging\nmail\nadmin\ntest\ninternal" > vhosts.txt
 
-# 3. Dar permissão de execução ao script principal
+# 4. Configurar permissões
+echo -e "${C_CYAN}[*]${X} A ajustar permissões de execução..."
 chmod +x reaper_suite.py
+chmod +x victim.py
 
-# 4. Criar um link simbólico para o /usr/local/bin
-# Isso permite que corras 'reaper' em qualquer lugar do terminal
-echo -e "${GREEN}[*] A configurar comando global...${NC}"
-sudo ln -sf "$(pwd)/reaper_suite.py" /usr/local/bin/reaper
+# 5. Instrução para o ficheiro HOSTS
+echo -e "\n${C_PINK}[!] ATENÇÃO - CONFIGURAÇÃO MANUAL NECESSÁRIA:${X}"
+echo -e "Para o modo VHOST realista, como exemplo adicione esta linha ao teu ${C_CYAN}/etc/hosts${X}:"
+echo -e "${C_PURP}127.0.0.1   megacorp-internal.local dev.megacorp-internal.local api.megacorp-internal.local staging.megacorp-internal.local mail.megacorp-internal.local admin.megacorp-internal.local${X}"
 
-# 5. Finalização
-echo -e "${GREEN}[+] Instalação concluída com sucesso!${NC}"
-echo -e "${GREEN}[+] Agora podes usar o comando: ${NC}${RED}reaper -u http://alvo.com -w wordlist.txt ...${NC}"
+echo -e "\n${C_CYAN}[+]${X} Setup concluído com sucesso. O laboratório está pronto."

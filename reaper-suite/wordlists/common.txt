@@ -1,0 +1,8 @@
+admin
+config
+backup
+api
+index
+login
+phpmyadmin
+.env

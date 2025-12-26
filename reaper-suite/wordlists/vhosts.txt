@@ -1,0 +1,8 @@
+www
+dev
+api
+staging
+mail
+admin
+test
+internal
