@@ -27,6 +27,7 @@ reaper -u [http://target.com/FUZZ](http://target.com/FUZZ) -w wordlist.txt -v
 
 ![usage](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/usage.png)
 
+```
 usage: reaper [-h] -u URL -w WORDLIST [-m {dir,vhost}] [-t THREADS] [-x EXTENSIONS] [--hc HC] [--hs HS] [-v]
 
 options:
@@ -39,6 +40,8 @@ options:
   --hc HC
   --hs HS
   -v, --verbose
+```
+
 
 ### 5. Practical Examples
 Bypassing 719-byte Static Errors: reaper -u http://target.local/FUZZ -w common.txt --hs 719
@@ -61,6 +64,8 @@ Bypassing 719-byte Static Errors: reaper -u http://target.local/FUZZ -w common.t
 
 ![report_generated](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/report_generated.png)
 
+
+```
 Example execution command: wkhtmltopdf reaper_report_2025-12-26_14-04-14.html Relatorio_Final_Megacorp.pdf
 
 Loading pages (1/6)
@@ -69,6 +74,7 @@ Resolving links (4/6)
 Loading headers and footers (5/6)
 Printing pages (6/6)
 Done
+```
 
 Report WEB Example:
 
@@ -97,15 +103,28 @@ Protocolo Stealth: Delays aleatórios e rotação de User-Agent para evitar bloq
 Filtragem Inteligente: Filtre por código de status, tamanho ou strings específicas no corpo da resposta (ex: erro de 719 bytes).
 
 ### 3. Instalação e Uso
+```
 chmod +x setup.sh && ./setup.sh
 reaper -u [http://target.com/FUZZ](http://target.com/FUZZ) -w wordlist.txt -v
-
+```
 
 ### 4. Comandos Avançados
--x	Adiciona extensões (ex: php,txt,bak).
---hs	Hide Size: Ignora respostas por tamanho exato de bytes (ex: --hs 719).
---delay	Define o atraso das requisições para furtividade (ex: 0.5-1.5).
+![usage](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/usage.png)
 
+```
+usage: reaper [-h] -u URL -w WORDLIST [-m {dir,vhost}] [-t THREADS] [-x EXTENSIONS] [--hc HC] [--hs HS] [-v]
+
+options:
+  -h, --help            show this help message and exit
+  -u, --url URL
+  -w, --wordlist WORDLIST
+  -m, --mode {dir,vhost}
+  -t, --threads THREADS
+  -x, --extensions EXTENSIONS
+  --hc HC
+  --hs HS
+  -v, --verbose
+```
 
 ### 5. Exemplos Práticos
 Bypass de Erros Estáticos de 719 bytes: reaper -u http://target.local/FUZZ -w common.txt --hs 719
