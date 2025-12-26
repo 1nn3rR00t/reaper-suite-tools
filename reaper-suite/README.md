@@ -83,8 +83,8 @@ License: MIT License. Disclaimer: Esta ferramenta foi desenvolvida estritamente 
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-<a name="portugues"></a>
-## 🇺🇸 Versão em Português
+<a name="português"></a>
+## BR Versão em Português
 
 ### 1. Visão Geral
 Fuzzer web inteligente e customizável desenvolvido para reconhecimento avançado. Incorpora técnicas de furtividade (stealth) e identificação de tecnologias do alvo para otimizar auditorias de segurança.
