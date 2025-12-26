@@ -1,0 +1,5 @@
+reaper_report_*.html
+reaper_report_*.json
+*.pdf
+__pycache__/
+.DS_Store

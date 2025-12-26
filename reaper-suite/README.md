@@ -1,3 +1,5 @@
+![Banner](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/banner.png)
+
 # 💀 Reaper Suite - Advanced Web Fuzzer 💀
 
 ![Banner](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/screenshots/hud.png)
@@ -25,10 +27,20 @@ reaper -u [http://target.com/FUZZ](http://target.com/FUZZ) -w wordlist.txt -v
 
 ### 4. Advanced Commands
 
-Flag	Description
--x	Append extensions (e.g., php,txt,bak).
---hs	Hide Size: Ignore responses by exact byte size (e.g., --hs 719).
---delay	Set request delay for stealth (e.g., 0.5-1.5).
+![usage](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/usage.png)
+
+usage: reaper [-h] -u URL -w WORDLIST [-m {dir,vhost}] [-t THREADS] [-x EXTENSIONS] [--hc HC] [--hs HS] [-v]
+
+options:
+  -h, --help            show this help message and exit
+  -u, --url URL
+  -w, --wordlist WORDLIST
+  -m, --mode {dir,vhost}
+  -t, --threads THREADS
+  -x, --extensions EXTENSIONS
+  --hc HC
+  --hs HS
+  -v, --verbose
 
 ### 5. Practical Examples
 Bypassing 719-byte Static Errors: reaper -u http://target.local/FUZZ -w common.txt --hs 719
@@ -39,9 +51,34 @@ Bypassing 719-byte Static Errors: reaper -u http://target.local/FUZZ -w common.t
 
 🖥️ A. Terminal HUD & Target Intell
 
+![hud](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/hud.png)
 
 ⚡ B. Infiltration Operation (Active Bypass)
 
+![vhost](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/vhost.png)
+
+📊 C. Professional Report
+
+![report_created](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/report_created.png)
+
+![report_generated](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/report_generated.png)
+
+Example execution command: wkhtmltopdf reaper_report_2025-12-26_14-04-14.html Relatorio_Final_Megacorp.pdf
+
+Loading pages (1/6)
+Counting pages (2/6)
+Resolving links (4/6)
+Loading headers and footers (5/6)
+Printing pages (6/6)
+Done
+
+Report WEB Example:
+
+![report_web](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/report_web.png)
+
+Report PDF Example:
+
+![report_pdf](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/report_pdf.png)
 
 ### 7. ⚖️ License & Disclaimer
 License: MIT License. Disclaimer: Esta ferramenta foi desenvolvida estritamente para fins educacionais e testes de penetração autorizados. O uso indevido é de total responsabilidade do usuário.
@@ -77,12 +114,34 @@ Bypass de Erros Estáticos de 719 bytes: reaper -u http://target.local/FUZZ -w c
 
 🖥️ A. HUD do Terminal & Inteligência de Alvo
 
+![hud](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/hud.png)
 
 ⚡ B. Operação de Infiltração (Bypass Ativo)
 
+![vhost](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/vhost.png)
 
 📊 C. Relatórios Profissionais
 
+![report_created](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/report_created.png)
+
+![report_generated](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/report_generated.png)
+
+Exemplo de execução: wkhtmltopdf reaper_report_2025-12-26_14-04-14.html Relatorio_Final_Megacorp.pdf
+
+Loading pages (1/6)
+Counting pages (2/6)
+Resolving links (4/6)
+Loading headers and footers (5/6)
+Printing pages (6/6)
+Done
+
+Exemplo de relatorio WEB:
+
+![report_web](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/report_web.png)
+
+Exemplo de relatorio PDF:
+
+![report_pdf](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/report_pdf.png)
 
 ### 7. ⚖️ Licença & Aviso Legal
 Licença: Licença MIT. Aviso Legal: Esta ferramenta foi desenvolvida estritamente para fins educacionais e testes de penetração autorizados. O uso indevido é de total responsabilidade do usuário.
