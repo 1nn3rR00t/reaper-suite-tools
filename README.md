@@ -1,6 +1,6 @@
 # 💀 Reaper Suite Tools 💀
 
-![Banner](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/screenshots/hud.png) collection of custom offensive security tools developed for Red Teaming, Penetration Testing, and CTF challenges. This repository showcases my ability to design, develop, and deploy specialized utilities for various phases of a security assessment.
+![Banner](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/hud.png) collection of custom offensive security tools developed for Red Teaming, Penetration Testing, and CTF challenges. This repository showcases my ability to design, develop, and deploy specialized utilities for various phases of a security assessment.
 
 ---
 
