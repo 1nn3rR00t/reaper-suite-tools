@@ -1,8 +1,6 @@
-![Banner](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/banner.png)
+![Banner](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/assets/hud.png)
 
 # 💀 Reaper Suite - Advanced Web Fuzzer 💀
-
-![Banner](https://github.com/1nn3rR00t/reaper-suite-tools/blob/main/reaper-suite/screenshots/hud.png)
 
 > **Languages:** [English](#english) | [Português](#português)
 
