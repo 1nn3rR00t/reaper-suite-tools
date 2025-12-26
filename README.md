@@ -11,8 +11,8 @@ Collection of custom offensive security tools developed for Red Teaming, Penetra
 | Tool Name        | Description                                                                                                    | Language | Status     | Link                                   |
 | :--------------- | :------------------------------------------------------------------------------------------------------------- | :------- | :--------- | :------------------------------------- |
 | **Reaper Suite** | An advanced web fuzzer with stealth capabilities, content filtering, and intelligent target reconnaissance.    | Python   | Stable     | [View Reaper Suite](reaper-suite/README.md) |
-| *[Your Next Tool]* | *[Brief description of your next tool]* | Python   | *[Planned]* | *[Link to tool's README]* |
-| *[Your Next Tool]* | *[Brief description of your next tool]* | Python   | *[Planned]* | *[Link to tool's README]* |
+| *[Coming Soon]*  | *[Coming Soon]* 					                                                            | Python   | *[Coming Soon]*       | *[Coming Soon]* |
+| *[Coming Soon]*  | *[Coming Soon]*                                                                                                | Python   | *[Coming Soon]* | *[Link to tool's README]* |
 
 ---
 
