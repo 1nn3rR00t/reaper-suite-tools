@@ -18,13 +18,14 @@ print_lock = threading.Lock()
 findings = []
 
 def print_banner():
-    banner = f"""
+    # Adicionamos 'r' (raw) junto com 'f' (format) para o Python ignorar as barras invertidas
+    banner = rf"""
 {C_PINK}    ____  __________ _____  __________ 
-{C_PINK}   / __ \/ ____/ __ / __ \/ ____/ __  \\
+{C_PINK}   / __ \/ ____/ __ / __ \/ ____/ __  \
 {C_PURP}  / /_/ / __/ / /_/ / /_/ / __/ / /_/ /
 {C_PURP} / _, _/ /___/ __  / ____/ /___/ _, _/ 
 {C_CYAN}/_/ |_/_____/_/ |_/_/   /_____/_/ |_|   
-{C_CYAN}         [ NN2RR00T - CORE v11.0 ]{X}"""
+{C_CYAN}         [ 1NN3RR00T - CORE v11.0 ]{X}"""
     print(banner)
 
 def print_hud(args, target_ip, total_payloads):

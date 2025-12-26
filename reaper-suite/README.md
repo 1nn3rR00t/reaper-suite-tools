@@ -21,7 +21,7 @@ Highly customizable and intelligent web fuzzer designed for advanced reconnaissa
 ```bash
 chmod +x setup.sh && ./setup.sh
 reaper -u [http://target.com/FUZZ](http://target.com/FUZZ) -w wordlist.txt -v
-
+```
 
 ### 4. Advanced Commands
 
