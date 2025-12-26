@@ -33,7 +33,7 @@ Each tool has its own dedicated directory with a detailed `README.md` for instal
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/YourGitHubUsername/reaper-suite-tools.git](https://github.com/YourGitHubUsername/reaper-suite-tools.git)
+    git clone https://github.com/1nn3rR00t/reaper-suite-tools.git](https://github.com/1nn3rR00t/reaper-suite-tools.git)
     cd reaper-suite-tools
     ```
 2.  **Navigate to the tool's directory:**
