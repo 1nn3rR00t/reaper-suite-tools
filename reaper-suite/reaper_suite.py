@@ -103,24 +103,36 @@ def generate_reports(target, findings_list):
     print(f"{C_CYAN}[REPORT]{X} Data Export: {C_WHITE}{report_name}.json{X}")
 
 def worker(payload, target_url, h_codes, h_sizes, verbose, mode, base_domain):
+    # Remove espaços e ignora linhas de comentários da wordlist
+    payload = payload.strip()
+    if not payload or payload.startswith('#'): return
+
     current_host = f"{payload}.{base_domain}" if mode == "vhost" else base_domain
     headers = {"User-Agent": "1NN3RR00T-Reaper/11.0", "Host": current_host}
 
     try:
         url = target_url if mode == "vhost" else target_url.replace("FUZZ", payload)
-        res = requests.get(url, headers=headers, timeout=7, allow_redirects=False)
+        res = requests.get(url, headers=headers, timeout=5, allow_redirects=False) # Timeout reduzido para velocidade
         size = len(res.content)
         is_hit = res.status_code not in h_codes and size not in h_sizes
 
         with print_lock:
             if is_hit:
-                sys.stdout.write("\r\033[2K")
+                sys.stdout.write("\r\033[2K") # Limpa a linha inteira
                 display = current_host if mode == "vhost" else payload
-                print(f"{C_CYAN}[FOUND]{X} {C_WHITE}{display:<25}{X} {C_PINK}➔{X} Status: {C_CYAN}{res.status_code}{X} {C_PURP}│{X} Size: {C_CYAN}{size}B{X}")
-                findings.append(display)
+                # Formatação alinhada
+                print(f"{C_CYAN}[FOUND]{X} {C_WHITE}{display:<30}{X} {C_PINK}➔{X} Status: {C_CYAN}{res.status_code:<3}{X} {C_PURP}│{X} Size: {C_CYAN}{size}B{X}")
+                findings.append(display) # Adiciona ao relatório
+            
             elif verbose:
-                sys.stdout.write(f"\r\033[K{C_DIM}[*] Scanning kernel: {payload[:40]}{X}")
-                sys.stdout.flush()
+                # [OTIMIZAÇÃO] THROTTLE VISUAL
+                # Usa o hash do payload para imprimir apenas ~10% das vezes (reduz I/O drasticamente)
+                # Isso permite que as threads rodem soltas sem esperar o terminal desenhar
+                if hash(payload) % 15 == 0: 
+                    display_payload = (payload[:35] + '..') if len(payload) > 35 else payload
+                    sys.stdout.write(f"\r\033[2K{C_DIM}[*] Scanning kernel: {display_payload:<40}{X}")
+                    sys.stdout.flush()
+
     except Exception: pass
 
 def main():
